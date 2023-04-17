@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+    id 'application'
+    
+    id 'maven-publish'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.google.zetasql.toolkit'
+            artifactId 'zetasql-toolkit-core'
+            version '0.1-SNAPSHOT'
+
+            from components.java
+
+            pom {
+                withXml {
+                    asNode().appendNode('dependencies').appendNode('dependency').with {
+                        appendNode('groupId', 'com.google.zetasql.toolkit')
+                        appendNode('artifactId', 'zetasql-toolkit-core')
+                        appendNode('version', '0.1-SNAPSHOT')
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'com.google.zetasql:zetasql-client:2022.08.1'
+    implementation 'com.google.zetasql:zetasql-jni-channel:2022.08.1'
+    implementation 'com.google.zetasql.toolkit:zetasql-toolkit-core:0.1-SNAPSHOT'
+    
+    implementation 'com.google.cloud:google-cloud-bigquery:2.24.5'
+
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.16.1'
+
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.slf4j:slf4j-simple:2.0.7'
+    
+    implementation 'io.grpc:grpc-netty-shaded:1.54.0'
+
+    testImplementation 'junit:junit:4.13'
+}
+
+application {
+    mainClassName = 'zetasql.java.App'
+}
+
+run {
+    if (project.hasProperty('appArgs')) {
+        args appArgs.split(',')
+    }
+}
+
+task buildMaven(type: Exec) {
+    workingDir 'zetasql-toolkit-core'
+    commandLine 'cmd', '/c', 'mvnw.cmd', 'clean', 'install', '-Dmaven.test.failure.ignore=true'
+}
+
+build.dependsOn buildMaven
