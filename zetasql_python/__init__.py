@@ -1,10 +1,17 @@
 from flask import Flask, request
 import json
+import logging
 import subprocess
 import time
 
 app = Flask(__name__)
 GENERATED_PATH = "generated"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 @app.route("/gradle", methods=["POST"])
@@ -16,13 +23,7 @@ def run_gradle():
     statement = request.json.get("statement")
 
     # we need all parameters to continue
-    if not all(
-        (
-            projectId,
-            table,
-            statement,
-        )
-    ):
+    if not all((projectId, table, statement)):
         return {"error": "Missing a required parameter."}, 400
 
     cmd = [
@@ -34,27 +35,24 @@ def run_gradle():
         f"-PappArgs={projectId}__SEP__{table}__SEP__{statement}",
     ]
 
+    logging.info(statement)
+
     result = subprocess.run(
-        cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
 
     stdout = result.stdout
     stderr = result.stderr
 
-    ast = {
-        "projectId": projectId,
-        "table": table,
-        "statement": statement,
-    }
+    ast = {"projectId": projectId, "table": table, "statement": statement}
 
     if stdout:
         ast["output"] = stdout
     elif stderr:
         ast["error"] = stderr
         return ast, 500
+
+    logging.info("\n" + stdout)
 
     with open(f"{GENERATED_PATH}/{projectId}.{table}-{time.time()}.json", "w+") as file:
         json.dump(ast, file)

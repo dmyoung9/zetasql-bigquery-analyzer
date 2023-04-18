@@ -52,4 +52,4 @@ RUN gradle build
 EXPOSE 6875
 
 # Run the application
-CMD ["python", "./main.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "--timeout", "120", "zetasql_python:app"]
