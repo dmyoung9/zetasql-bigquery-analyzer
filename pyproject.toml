@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "zetasql-python"
 version = "0.1.0"
+license = "MIT"
 description = ""
 authors = ["David Young <dmyoung9@asu.edu>"]
 readme = "README.md"
