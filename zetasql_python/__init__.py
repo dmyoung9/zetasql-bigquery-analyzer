@@ -13,7 +13,17 @@ def run_gradle():
 
     projectId = request.json.get("projectId")
     table = request.json.get("table")
-    statement = request.json.get("query")
+    statement = request.json.get("statement")
+
+    # we need all parameters to continue
+    if not all(
+        (
+            projectId,
+            table,
+            statement,
+        )
+    ):
+        return {"error": "Missing a required parameter."}, 400
 
     cmd = [
         "gradle",
@@ -21,8 +31,9 @@ def run_gradle():
         "--console=plain",
         "run",
         # arguments passed to the Gradle build script
-        f'-PappArgs="{projectId}","{table}","{statement}"',
+        f"-PappArgs={projectId}__SEP__{table}__SEP__{statement}",
     ]
+
     result = subprocess.run(
         cmd,
         stdout=subprocess.PIPE,
@@ -38,12 +49,14 @@ def run_gradle():
         "table": table,
         "statement": statement,
     }
+
     if stdout:
         ast["output"] = stdout
-    if stderr:
+    elif stderr:
         ast["error"] = stderr
+        return ast, 500
 
-    with open(f"{projectId}.{table}-{time.time()}.json", "w+") as file:
+    with open(f"{GENERATED_PATH}/{projectId}.{table}-{time.time()}.json", "w+") as file:
         json.dump(ast, file)
 
-    return ast
+    return ast, 200

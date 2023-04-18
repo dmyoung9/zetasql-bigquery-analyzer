@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+credentials.json
+*.log
+*.sql
+*.sqlite
+*.tar
+*.gz
+*.zip
+*.7z
+*.pdf
+*.csv
+*.json
+*.txt

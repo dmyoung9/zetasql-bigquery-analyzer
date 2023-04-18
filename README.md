@@ -19,12 +19,13 @@ The versions specified below are what was used to build the project, and are the
 ### Gradle and Maven Build
 The Gradle and Maven build systems is used to build the Java portion of this app, and its dependencies.
 
-To build this portion of the app, execute the following command from the root folder of this project:
+To build this portion of the app, execute the following commands from the root folder of this project:
 ```bash
+$ gradle buildMaven
 $ gradle build
 ```
 
-This will build the `zeta-toolkit-core` folder with Maven, the `src` folder using Gradle, and all of their dependencies.
+Each command will take some time to process, so be patient! When they're finished, this will have built the `zeta-toolkit-core` folder with Maven, the `src` folder using Gradle, and all of their dependencies.
 
 ### Python Environment
 This project leverages Poetry for Python dependency management.
@@ -85,3 +86,20 @@ $ curl \
     }'
 ```
 
+
+Docker
+---
+
+This app can also be run using Docker.
+
+To build the image, run the following command in the root folder of this project:
+```bash
+$ docker build -t zetasql-bigquery-analyzer .
+```
+
+And to run it, you can start a container with the following command:
+```bash
+$ docker run -d --name zetasql-analyzer-container -v /path/to/your/credentials.json:/app/credentials.json zetasql-bigquery-analyzer
+```
+
+While the container is running, you can access it at `http://localhost:5000`.

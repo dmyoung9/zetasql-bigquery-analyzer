@@ -64,13 +64,11 @@ application {
 
 run {
     if (project.hasProperty('appArgs')) {
-        args appArgs.split(',')
+        args appArgs.split('(__SEP__)')
     }
 }
 
 task buildMaven(type: Exec) {
     workingDir 'zetasql-toolkit-core'
-    commandLine 'cmd', '/c', 'mvnw.cmd', 'clean', 'install', '-Dmaven.test.failure.ignore=true'
+    commandLine './mvnw', 'clean', 'install', '-DskipTests'
 }
-
-build.dependsOn buildMaven
