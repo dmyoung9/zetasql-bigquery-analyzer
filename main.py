@@ -2,7 +2,7 @@ import os
 
 from zetasql_python import app
 
-GENERATED_PATH = "generated"
+GENERATED_PATH = "./generated"
 
 
 def start_flask_app(debug: bool = False) -> None:

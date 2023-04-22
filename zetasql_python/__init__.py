@@ -5,7 +5,7 @@ import subprocess
 import time
 
 app = Flask(__name__)
-GENERATED_PATH = "generated"
+GENERATED_PATH = "./generated"
 
 logging.basicConfig(
     level=logging.INFO,
