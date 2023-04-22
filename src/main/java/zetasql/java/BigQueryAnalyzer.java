@@ -16,7 +16,7 @@ import com.google.zetasql.toolkit.options.BigQueryLanguageOptions;
 
 public class BigQueryAnalyzer {
 
-	private static final String KEYFILE = "credentials.json";
+	private static final String KEYFILE = "/credentials.json";
 
 	private String projectId = "";
 	private String table = "";
@@ -37,18 +37,19 @@ public class BigQueryAnalyzer {
 	private BigQuery getBigQueryClient() {
 		BigQuery client = null;
 		String currentWorkingDirectory = System.getProperty("user.dir");
+		String keyfilePath = currentWorkingDirectory + KEYFILE;
 
 		try {
 			client = BigQueryOptions.newBuilder()
 					.setProjectId(this.projectId)
 					.setCredentials(ServiceAccountCredentials
-							.fromStream(new FileInputStream(currentWorkingDirectory + KEYFILE)))
+							.fromStream(new FileInputStream(keyfilePath)))
 					.build()
 					.getService();
 		} catch (FileNotFoundException fnfe) {
-			System.out.println("Couldn't find key file");
+			System.err.println("Couldn't find key file at: " + keyfilePath);
 		} catch (IOException ioe) {
-			System.out.println("IO exception!");
+			System.err.println("IO exception reading file at: " + keyfilePath);
 		}
 
 		return client;

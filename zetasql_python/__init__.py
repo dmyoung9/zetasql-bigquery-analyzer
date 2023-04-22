@@ -52,8 +52,8 @@ def run_gradle():
     if stdout:
         ast["output"] = stdout
     elif stderr:
-        ast["error"] = stderr
-        return ast, 500
+        logging.error(stderr)
+        return {"error": stderr}, 500
 
     logging.info("\n" + stdout)
 
