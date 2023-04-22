@@ -70,5 +70,5 @@ run {
 
 task buildMaven(type: Exec) {
     workingDir 'zetasql-toolkit-core'
-    commandLine './mvnw', 'clean', 'install', '-DskipTests'
+    commandLine 'sh', './mvnw', 'clean', 'install', '-DskipTests'
 }
