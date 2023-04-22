@@ -49,7 +49,7 @@ RUN gradle buildMaven
 RUN gradle build
 
 # Expose the port the app runs on
-EXPOSE 6875
+EXPOSE 5000
 
 # Run the application
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "--timeout", "120", "zetasql_python:app"]

@@ -65,7 +65,7 @@ To run this app, simply start the Flask backend via:
 $ python ./main.py
 ```
 
-While running, the backend serves a single endpoint: `/gradle`. Sending a `POST` request with the following body data will trigger the app to generate an AST diagram, and output it to a file.
+While running, the backend serves a single endpoint: `/gradle`. Sending a `POST` request with the following body data will trigger the app to generate an AST diagram, and output it to a file in the `generated` folder.
 
 | Parameter | Description | Example Value |
 |-----------|-------------|---------------|
@@ -99,7 +99,7 @@ $ docker build -t zetasql-bigquery-analyzer .
 
 And to run it, you can start a container with the following command:
 ```bash
-$ docker run -d --name zetasql-analyzer-container -v /path/to/your/credentials.json:/app/credentials.json zetasql-bigquery-analyzer
+$ docker run -d --name zetasql-analyzer-container -v /path/to/your/credentials.json:/app/credentials.json -v /path/to/your/generated/folder:/app/generated zetasql-bigquery-analyzer
 ```
 
 While the container is running, you can access it at `http://localhost:5000`.
