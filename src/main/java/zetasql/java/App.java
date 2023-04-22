@@ -26,6 +26,9 @@ public class App {
 
         BigQueryAnalyzer analyzer = new BigQueryAnalyzer(projectId, table);
         Iterator<ResolvedStatement> statements = analyzer.analyze(statement);
-        statements.forEachRemaining(output -> System.out.println(output.debugString()));
+
+        if (statements != null) {
+            statements.forEachRemaining(output -> System.out.println(output.debugString()));
+        }
     }
 }

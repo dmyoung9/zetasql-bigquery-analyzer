@@ -34,28 +34,46 @@ public class BigQueryAnalyzer {
 		this.analyzer = getAnalyzer();
 	}
 
+	private ServiceAccountCredentials loadCredentialsFromFile(String keyfilePath) {
+		ServiceAccountCredentials creds = null;
+
+		try {
+			FileInputStream keyfile = new FileInputStream(keyfilePath);
+			creds = ServiceAccountCredentials.fromStream(keyfile);
+		} catch (FileNotFoundException fnfe) {
+			System.err.println("Couldn't find key file at: " + keyfilePath);
+			// System.err.println(fnfe);
+		} catch (IOException ioe) {
+			System.err.println("IO exception reading key file at: " + keyfilePath);
+			System.err.println(ioe);
+		}
+
+		return creds;
+	}
+
 	private BigQuery getBigQueryClient() {
-		BigQuery client = null;
 		String currentWorkingDirectory = System.getProperty("user.dir");
 		String keyfilePath = currentWorkingDirectory + KEYFILE;
 
-		try {
-			client = BigQueryOptions.newBuilder()
-					.setProjectId(this.projectId)
-					.setCredentials(ServiceAccountCredentials
-							.fromStream(new FileInputStream(keyfilePath)))
-					.build()
-					.getService();
-		} catch (FileNotFoundException fnfe) {
-			System.err.println("Couldn't find key file at: " + keyfilePath);
-		} catch (IOException ioe) {
-			System.err.println("IO exception reading file at: " + keyfilePath);
+		ServiceAccountCredentials creds = loadCredentialsFromFile(keyfilePath);
+		if (creds == null) {
+			System.err.println("No credentials could be loaded.");
+			return null;
 		}
+
+		BigQueryOptions.Builder builder = BigQueryOptions.newBuilder().setProjectId(this.projectId)
+				.setCredentials(creds);
+		BigQuery client = builder.build().getService();
 
 		return client;
 	}
 
 	private BigQueryCatalog getBigQueryCatalog() {
+		if (this.client == null) {
+			System.err.println("No client available.");
+			return null;
+		}
+
 		BigQueryCatalog catalog = new BigQueryCatalog(this.projectId, this.client);
 		catalog.addTable(this.projectId + '.' + this.table);
 
@@ -71,6 +89,11 @@ public class BigQueryAnalyzer {
 	}
 
 	public Iterator<ResolvedStatement> analyze(String statement) {
+		if (this.catalog == null) {
+			System.err.println("No catalog could be built.");
+			return null;
+		}
+
 		Iterator<ResolvedStatement> statementIterator = analyzer.analyzeStatements(statement, this.catalog);
 		return statementIterator;
 	}
