@@ -36,12 +36,13 @@ public class BigQueryAnalzyer {
 
 	private BigQuery getBigQueryClient() {
 		BigQuery client = null;
+		String currentWorkingDirectory = System.getProperty("user.dir");
 
 		try {
 			client = BigQueryOptions.newBuilder()
 					.setProjectId(this.projectId)
 					.setCredentials(ServiceAccountCredentials
-							.fromStream(new FileInputStream(KEYFILE)))
+							.fromStream(new FileInputStream(currentWorkingDirectory + KEYFILE)))
 					.build()
 					.getService();
 		} catch (FileNotFoundException fnfe) {
@@ -73,4 +74,3 @@ public class BigQueryAnalzyer {
 		return statementIterator;
 	}
 }
-
