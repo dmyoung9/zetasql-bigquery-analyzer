@@ -14,7 +14,7 @@ import com.google.zetasql.toolkit.ZetaSQLToolkitAnalyzer;
 import com.google.zetasql.toolkit.catalog.bigquery.BigQueryCatalog;
 import com.google.zetasql.toolkit.options.BigQueryLanguageOptions;
 
-public class BigQueryAnalzyer {
+public class BigQueryAnalyzer {
 
 	private static final String KEYFILE = "credentials.json";
 
@@ -25,7 +25,7 @@ public class BigQueryAnalzyer {
 	private BigQueryCatalog catalog = null;
 	private ZetaSQLToolkitAnalyzer analyzer = null;
 
-	public BigQueryAnalzyer(String projectId, String table) {
+	public BigQueryAnalyzer(String projectId, String table) {
 		this.projectId = projectId;
 		this.table = table;
 
