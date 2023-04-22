@@ -1,11 +1,14 @@
 from flask import Flask, request
 import json
 import logging
+import os
+from pathlib import Path
 import subprocess
 import time
 
 app = Flask(__name__)
-GENERATED_PATH = "./generated"
+GENERATED_PATH = Path(os.getcwd()) / "generated"
+os.makedirs(GENERATED_PATH, exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,

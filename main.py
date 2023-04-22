@@ -1,8 +1,9 @@
+from pathlib import Path
 import os
 
 from zetasql_python import app
 
-GENERATED_PATH = "./generated"
+GENERATED_PATH = Path(os.getcwd()) / "generated"
 
 
 def start_flask_app(debug: bool = False) -> None:
