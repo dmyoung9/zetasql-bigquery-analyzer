@@ -2,7 +2,7 @@
 
 This project aims to act as a "wrapper" around Google's [ZetaSQL](https://github.com/Google/zetasql) library, for the purpose of generating AST diagrams out of arbitrary BigQuery operations.
 
-Inspiration for the design of this project comes from @ZTRossouw.
+Inspiration for the design of this project comes from [@ZTRossouw](https://github.com/ZTRossouw).
 
 
 Setup
